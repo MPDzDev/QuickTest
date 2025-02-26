@@ -1,33 +1,59 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting,
-using NSubstitute,
-using System
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
+using System;
+using System.Collections.Generic;
 
 {{usings}}
 
 namespace {{namespace}}
 {
+    /// <summary>
+    /// Unit tests for {{className}}
+    /// </summary>
     [TestClass]
+    [TestCategory("Unit")]
     public class {{className}}Tests
     {
+        // System under test
         private {{className}} _sut;
+        
+        // Dependencies
         {{dependency_section}}
-
+        
         [TestInitialize]
         public void TestInitialize()
         {
+            // Initialize mocks
             {{dependencyInitSection}}
+            
+            // Initialize system under test
             _sut = new {{className}}({{constructorParams}});
         }
-
+        
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            // Clean up test resources if needed
+        }
+        
+        #region Test Methods
+        
         [TestMethod]
         public void Test_WhenCondition_ThenResult()
         {
             // Arrange
-
+            // Set up test-specific data and mock behaviors
+            
             // Act
-
+            // Call the method being tested
+            
             // Assert
+            // Verify the expected outcome
             Assert.IsTrue(true);
         }
+        
+        {{testMethods}}
+        
+        #endregion
     }
 }

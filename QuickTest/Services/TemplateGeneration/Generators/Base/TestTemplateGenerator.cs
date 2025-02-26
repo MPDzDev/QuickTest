@@ -31,7 +31,6 @@ namespace QuickTest.Services.TemplateGeneration.Generators.Base
 
             string template = File.ReadAllText(templatePath);
 
-
             foreach (KeyValuePair<string, object> kvp in context)
             {
                 if (kvp.Value is string)
@@ -131,15 +130,150 @@ namespace QuickTest.Services.TemplateGeneration.Generators.Base
                        .Where(line => !string.IsNullOrWhiteSpace(line)));
         }
 
-        protected object CreateTestMethod(string name)
+        protected object CreateTestMethod(string name, Method method = null)
         {
+            string arrangeCode = "// TODO: Set up test prerequisites";
+            string actCode = "// TODO: Execute the operation being tested";
+            string assertCode = "// TODO: Verify the expected outcome";
+            
+            // If we have method context, we can be more specific
+            if (method != null)
+            {
+                // Generate arrange code based on parameters
+                var arrangeBuilder = new StringBuilder();
+                foreach (var param in method.ParameterList)
+                {
+                    string defaultValue = GetDefaultValueForType(param.Type);
+                    arrangeBuilder.AppendLine($"            var {param.Name} = {defaultValue};");
+                }
+                
+                if (arrangeBuilder.Length > 0)
+                    arrangeCode = arrangeBuilder.ToString().TrimEnd();
+                    
+                // Generate act code
+                string paramList = string.Join(", ", method.ParameterList.Select(p => 
+                    p.IsOut ? $"out {p.Name}" : 
+                    p.IsRef ? $"ref {p.Name}" : 
+                    p.Name));
+                    
+                actCode = method.ReturnType.ToLower() == "void" ? 
+                    $"_sut.{method.Name}({paramList});" : 
+                    $"var result = _sut.{method.Name}({paramList});";
+                    
+                // Generate assert code
+                if (method.ReturnType.ToLower() != "void")
+                {
+                    assertCode = "Assert.IsNotNull(result);";
+                }
+            }
+            
+            // Exception testing
+            if (name.Contains("ThrowsException") || name.Contains("Throws"))
+            {
+                string exceptionType = "Exception";
+                if (name.Contains("NotFoundException"))
+                    exceptionType = "NotFoundException";
+                else if (name.Contains("ValidationException"))
+                    exceptionType = "ValidationException";
+                else if (name.Contains("ArgumentException"))
+                    exceptionType = "ArgumentException";
+                else if (name.Contains("InvalidOperation"))
+                    exceptionType = "InvalidOperationException";
+                
+                actCode = $"// Act & Assert\r\n            var exception = Assert.ThrowsException<{exceptionType}>(() =>\r\n            {{\r\n                {actCode.TrimEnd(';')}\r\n            }});";
+                assertCode = "// Additional assertions on exception properties if needed";
+            }
+            
             return new
             {
                 name = name,
-                arrangeCode = "// TODO: Add arrangement code",
-                actCode = "// TODO: Add action code",
-                assertCode = "Assert.IsTrue(true);"
+                arrangeCode = arrangeCode,
+                actCode = actCode,
+                assertCode = assertCode
             };
+        }
+
+        private string GetDefaultValueForType(string type)
+        {
+            switch (type.ToLower())
+            {
+                case "string":
+                    return "\"test\"";
+                case "int":
+                case "int32":
+                    return "1";  // More meaningful than 0
+                case "long":
+                case "int64":
+                    return "1L";
+                case "bool":
+                case "boolean":
+                    return "true";  // More meaningful than false
+                case "decimal":
+                    return "1.0m";
+                case "double":
+                    return "1.0d";
+                case "float":
+                    return "1.0f";
+                case "datetime":
+                    return "DateTime.Now";
+                case "guid":
+                    return "Guid.NewGuid()";
+                case "object":
+                    return "new object()";
+            }
+            
+            // Handle collections
+            if (type.Contains("IEnumerable<") || type.Contains("ICollection<") || 
+                type.Contains("IList<") || type.Contains("List<"))
+            {
+                string innerType = ExtractGenericType(type);
+                return $"new List<{innerType}>()";
+            }
+            
+            if (type.Contains("[]"))
+            {
+                string arrayType = type.Replace("[]", "");
+                return $"new {arrayType}[0]";
+            }
+            
+            // Handle dictionaries
+            if (type.Contains("Dictionary<") || type.Contains("IDictionary<"))
+            {
+                string[] genericTypes = ExtractMultipleGenericTypes(type);
+                if (genericTypes.Length == 2)
+                {
+                    return $"new Dictionary<{genericTypes[0]}, {genericTypes[1]}>()";
+                }
+            }
+            
+            return "null";
+        }
+
+        private string ExtractGenericType(string type)
+        {
+            int startIndex = type.IndexOf('<') + 1;
+            int endIndex = type.LastIndexOf('>');
+            
+            if (startIndex > 0 && endIndex > startIndex)
+            {
+                return type.Substring(startIndex, endIndex - startIndex);
+            }
+            
+            return "object";
+        }
+
+        private string[] ExtractMultipleGenericTypes(string type)
+        {
+            int startIndex = type.IndexOf('<') + 1;
+            int endIndex = type.LastIndexOf('>');
+            
+            if (startIndex > 0 && endIndex > startIndex)
+            {
+                string genericPart = type.Substring(startIndex, endIndex - startIndex);
+                return genericPart.Split(',').Select(t => t.Trim()).ToArray();
+            }
+            
+            return new[] { "object", "object" };
         }
     }
 }

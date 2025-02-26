@@ -1,12 +1,62 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System
+using System;
+
 {{usings}}
 
 namespace {{namespace}}
 {
+    /// <summary>
+    /// Integration tests for {{className}}
+    /// </summary>
     [TestClass]
+    [TestCategory("Integration")]
     public class {{className}}Tests
     {
-       
+        // System under test
+        private {{className}} _sut;
+        
+        [ClassInitialize]
+        public static void ClassInitialize(TestContext context)
+        {
+            // Initialize shared test resources
+        }
+        
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            // Clean up shared resources
+        }
+        
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            // Initialize system under test with required dependencies
+            // Set up test environment for each test
+        }
+        
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            // Clean up after each test
+        }
+        
+        #region Test Methods
+        
+        [TestMethod]
+        public void Operation_WithValidInput_PerformsCorrectly()
+        {
+            // Arrange
+            // Prepare test data and environment
+            
+            // Act
+            // Execute the operation being tested
+            
+            // Assert
+            // Verify the expected outcome
+        }
+        
+        {{testMethods}}
+        
+        #endregion
     }
 }

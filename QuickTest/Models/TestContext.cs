@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuickTest.Models
 {
@@ -12,5 +9,9 @@ namespace QuickTest.Models
         public string ClassName { get; set; }
         public string[] Usings { get; set; }
         public object[] Dependencies { get; set; }
+        public Method[] Methods { get; set; } = new Method[0];
+        public Property[] Properties { get; set; } = new Property[0];
+        public ClassType ClassType { get; set; } = ClassType.Unknown;
+        public string[] ClassAttributes { get; set; } = new string[0];
     }
 }
