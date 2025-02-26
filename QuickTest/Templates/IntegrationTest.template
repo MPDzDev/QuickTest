@@ -1,0 +1,12 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System
+{{usings}}
+
+namespace {{namespace}}
+{
+    [TestClass]
+    public class {{className}}Tests
+    {
+       
+    }
+}

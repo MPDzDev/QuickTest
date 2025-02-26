@@ -1,0 +1,33 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting,
+using NSubstitute,
+using System
+
+{{usings}}
+
+namespace {{namespace}}
+{
+    [TestClass]
+    public class {{className}}Tests
+    {
+        private {{className}} _sut;
+        {{dependency_section}}
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            {{dependencyInitSection}}
+            _sut = new {{className}}({{constructorParams}});
+        }
+
+        [TestMethod]
+        public void Test_WhenCondition_ThenResult()
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+            Assert.IsTrue(true);
+        }
+    }
+}

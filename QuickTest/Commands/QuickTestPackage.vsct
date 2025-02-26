@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Commands package="guidQuickTestPackage">
+    <Groups>
+      <Group guid="guidQuickTestPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+      </Group>
+    </Groups>
+    <Buttons>
+      <Button guid="guidQuickTestPackageCmdSet" id="UnitTestCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidQuickTestPackageCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>Run Unit Test</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidQuickTestPackageCmdSet" id="IntegrationTestCommandId" priority="0x0101" type="Button">
+        <Parent guid="guidQuickTestPackageCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidImages" id="bmpPic2" />
+        <Strings>
+          <ButtonText>Run Integration Test</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidQuickTestPackageCmdSet" id="OriginalClassCommandId" priority="0x0102" type="Button">
+        <Parent guid="guidQuickTestPackageCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidImages" id="bmpPic3" />
+        <Strings>
+          <ButtonText>Open Original Class</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+    <Bitmaps>
+      <Bitmap guid="guidImages" href="Resources\CreateOrNavigateCommand.png" usedList="bmpPic1, bmpPic2, bmpPic3"/>
+    </Bitmaps>
+  </Commands>
+  <KeyBindings>
+     <KeyBinding guid="guidQuickTestPackageCmdSet" id="UnitTestCommandId" editor="guidVSStd97" key1="U" mod1="Control Alt Shift"/>
+    <KeyBinding guid="guidQuickTestPackageCmdSet" id="IntegrationTestCommandId" editor="guidVSStd97" key1="I" mod1="Control Alt Shift"/>
+    <KeyBinding guid="guidQuickTestPackageCmdSet" id="OriginalClassCommandId" editor="guidVSStd97" key1="Y" mod1="Control Alt Shift"/>
+  </KeyBindings>
+  <Symbols>
+    <GuidSymbol name="guidQuickTestPackage" value="{02f087f1-2a2e-412e-a3fb-91ad6edd2995}" />
+    <GuidSymbol name="guidQuickTestPackageCmdSet" value="{78bb50c8-df43-4880-bb05-458fd449d8f5}">
+      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="UnitTestCommandId" value="0x0100" />
+      <IDSymbol name="IntegrationTestCommandId" value="0x0101" />
+      <IDSymbol name="OriginalClassCommandId" value="0x0102" />
+    </GuidSymbol>
+    <GuidSymbol name="guidImages" value="{20180074-419c-47d3-a919-3c8d6d8f4356}" >
+      <IDSymbol name="bmpPic1" value="1" />
+      <IDSymbol name="bmpPic2" value="2" />
+      <IDSymbol name="bmpPic3" value="3" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>
